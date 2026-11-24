@@ -3,18 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Projectplanning Machine supports</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://jsdelivr.net"></script>
-<script>
-  const supabaseUrl = 'https://rcevivqtbsqzwlwxwvep.supabase.co';
-  const supabaseKey = 'sb_publishable_9LOGGFN2xKtNdcWOMT3bCA_D3Z7KJmc';
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-  // Voorbeeld om data op te halen:
-  async function laadData() {
-    const { data, error } = await supabase.from('users').select('*');
-    console.log(data);
-  }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eaf2fb;--sf:#fff;--tx:#1e2a3a;--mu:#60708a;--ln:#d5e0ee;--ac:#2f6fd0;--red:#d6453d;--org:#e08a2c;--grn:#2e9d68;--teal:#1f9a9a;--blu:#3b82d6;--gry:#8a9bb0;--pur:#7c5cc4;--pink:#c4558b;--due:#6d3fc0;--selbg:#dbeafe;--hov:#eef4fc;--ps:78%;--pl:90%;--pl2:96%;--pb:58%;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -86,16 +75,32 @@ body{overflow:hidden}#app{display:flex;flex-direction:column;height:100vh}
 .sup{border:1px solid var(--ln);border-radius:10px;padding:6px 8px;margin:6px 0}.sup .h{display:flex;gap:6px;margin-bottom:4px}.sup .h input{flex:1}.sup .h input[type=number]{flex:0 0 120px}
 .ibtn{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--ln)}.lgbar{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mu);padding:6px 14px;background:var(--sf);border-top:1px solid var(--ln)}
 .sup .h .wdw{display:flex;align-items:center;gap:5px;flex:0 0 auto}.sup .h .wdw input{width:70px!important;flex:none!important}.wdw em{font-style:normal;font-size:12px;color:var(--mu)}.arr{grid-column:1/-1;font-size:12px;padding:3px 8px;border-radius:6px}.arr.open{background:rgba(224,138,44,.15);color:var(--org)}.arr.ok{background:rgba(46,157,104,.13);color:var(--grn)}.arr label{display:flex;gap:6px;align-items:center;cursor:pointer;color:inherit;font-size:12px}.arr input{width:auto}.chip.act b{color:var(--org)}.ms.na::before{content:"!";position:absolute;left:-5px;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--org);color:#fff;font-size:9px;line-height:12px;font-weight:700;z-index:3}#hlp{width:min(900px,96vw);max-height:92vh}.hb{padding:8px 18px 14px;font-size:14px;line-height:1.55}.hb ul,.hb ol{padding-left:20px}.hb li{margin:4px 0}.ht{width:100%;margin:8px 0}.ht td,.ht th{white-space:normal;vertical-align:top}details>summary{cursor:pointer;font-weight:600;padding:8px 16px;background:var(--bg);border-top:1px solid var(--ln);font-size:13px}
+
+#login{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
+#login.on{display:flex}
+#login .box{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:28px 26px;width:100%;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+#login h2{margin:0 0 4px;font-size:20px}#login p{margin:0 0 16px;color:var(--mu)}
+#login label{display:block;font-size:12px;color:var(--mu);margin:10px 0 3px}#login input{width:100%;padding:9px 10px}
+#login button.go{width:100%;margin-top:16px;padding:10px;border:0;border-radius:8px;background:var(--ac);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+#login .lnk{background:none;border:0;color:var(--ac);cursor:pointer;font:inherit;padding:0;margin-top:12px}
+#login .er{color:var(--red);min-height:18px;margin-top:10px;font-size:13px}#login .ok{color:var(--grn)}
+#usr{display:flex;align-items:center;gap:6px;font-size:12px;color:#cfe0f5}#usr b{font-weight:600}
+body.ro #q{display:block}
 </style></head><body>
 <div id="app"><div id="top"><div class="brand">▦ Projectplanning <span>Machine supports</span></div><nav id="nav"></nav>
 <input id="q" placeholder="🔍 Zoek fase, order, PO…" oninput="qs=this.value;render()" style="width:200px"><span class="sp"></span>
 <span class="zm2"><button onclick="zoom(-1)" title="Uitzoomen">−</button><button onclick="zoom(1)" title="Inzoomen">+</button><button onclick="fitZoom()" title="Alles in beeld">⤢</button></span>
 <label>Kleuren <select id="th" onchange="setTheme(this.value)"><option value="light">Licht</option><option value="dark">Donker</option><option value="auto">Automatisch</option></select></label>
-<label>Initialen <input id="who" size="4" maxlength="4" style="text-transform:uppercase;width:56px"></label>
+<span id="usr"></span><label>Initialen <input id="who" size="4" maxlength="4" style="text-transform:uppercase;width:56px"></label>
 <button class="tb2" onclick="$('#xf').click()" title="Excel importeren">⇪ Excel</button><button class="tb2" onclick="xExport()" title="Excel exporteren">⇩ Excel</button><input type="file" id="xf" accept=".xlsx,.xls" hidden onchange="xImport(this)">
 <button class="tb2" onclick="showHelp()" title="Uitleg en handleiding" style="font-size:15px;padding:4px 10px">ⓘ</button><button class="tb2 add" onclick="quickAdd()">+ Fase</button></div>
 <div id="ws"><div id="chips"></div><div id="wsb"><div id="gp"></div><aside id="insp"></aside></div><div id="leg"></div></div><main id="m" style="display:none"></main></div>
 
+<div id="login"><form class="box" id="lf" onsubmit="return false"><h2>▦ Projectplanning</h2><p id="lsub">Log in om verder te gaan.</p>
+<div id="lmail"><label for="le">E-mailadres</label><input id="le" type="email" autocomplete="username" required></div>
+<div id="lpw"><label for="lp" id="lpl">Wachtwoord</label><input id="lp" type="password" autocomplete="current-password" minlength="8" required></div>
+<div id="lpw2" style="display:none"><label for="lp2">Herhaal wachtwoord</label><input id="lp2" type="password" autocomplete="new-password" minlength="8"></div>
+<button class="go" id="lgo" type="submit">Inloggen</button><div class="er" id="ler"></div><button class="lnk" id="lfg" type="button">Wachtwoord vergeten?</button></form></div>
 <dialog id="dlg"></dialog><div id="toast"></div><dialog id="cfm"></dialog><dialog id="hlp"></dialog>
 <script>
 const SEED=[{"project": "Paprec", "fase": "1", "status": "Geleverd", "transporteur": "Quehenberger", "inklaringDoor": "Panterra Logistics", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511284781", "po": "5511282006", "ref": "IO2011946", "kgOg": 19946.0, "kg": 19946.0, "dueOg": "2026-10-16", "due": "2026-10-16", "drawNeed": "2026-08-14", "drawRec": "2026-08-28", "confirmed": "2026-10-19", "ready": "2026-10-12", "pickup": "2026-10-16", "customs": "2026-10-20", "onsite": "2026-10-19", "delivered": "2026-10-20", "comments": [], "lastdelivered": null, "id": "f0"}, {"project": "Paprec", "fase": "2a", "status": "Ingeklaard", "transporteur": "Quehenberger", "inklaringDoor": "Gaston Schul", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511285305", "po": "5511282687", "ref": "IO2012895", "kgOg": 20034.0, "kg": 20034.0, "dueOg": "2026-10-16", "due": "2026-10-16", "drawNeed": "2026-08-14", "drawRec": "2026-09-04", "confirmed": "2026-11-02", "ready": "2026-10-22", "pickup": "2026-10-22", "customs": "2026-10-26", "onsite": "2026-10-26", "delivered": null, "comments": [], "lastdelivered": null, "id": "f1"}, {"project": "Paprec", "fase": "2b", "status": "Productie", "transporteur": "Quehenberger", "inklaringDoor": "Gaston Schul", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511285305", "po": "5511282687", "ref": "IO2012895", "kgOg": 19000.0, "kg": 19000.0, "dueOg": "2026-10-16", "due": "2026-10-16", "drawNeed": "2026-08-14", "drawRec": "2026-09-04", "confirmed": "2026-11-06", "ready": "2026-10-26", "pickup": "2026-10-29", "customs": "2026-11-02", "onsite": "2026-11-02", "delivered": null, "comments": [], "lastdelivered": null, "id": "f2"}, {"project": "Paprec", "fase": "2c", "status": "Productie", "transporteur": "Quehenberger", "inklaringDoor": "Gaston Schul", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511285305", "po": "5511282687", "ref": "IO2012895", "kgOg": null, "kg": null, "dueOg": "2026-10-16", "due": "2026-10-16", "drawNeed": "2026-08-14", "drawRec": "2026-09-04", "confirmed": "2026-11-06", "ready": "2026-10-26", "pickup": "2026-10-31", "customs": "2026-11-04", "onsite": "2026-11-02", "delivered": null, "comments": [], "lastdelivered": null, "id": "f3"}, {"project": "Paprec", "fase": "3", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "Gaston Schul", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511287401", "po": "5511283942", "ref": "IO2013254", "kgOg": 21635.0, "kg": 30362.4, "dueOg": "2026-10-30", "due": "2026-10-30", "drawNeed": "2026-08-28", "drawRec": "2026-09-29", "confirmed": "2026-11-27", "ready": "2026-11-13", "pickup": "2026-11-13", "customs": null, "onsite": "2026-11-20", "delivered": null, "comments": [], "lastdelivered": null, "id": "f4"}, {"project": "Paprec", "fase": "4", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511287247", "po": "5511284286", "ref": "IO2013153", "kgOg": 9631.0, "kg": 26789.5, "dueOg": "2026-11-13", "due": "2026-11-13", "drawNeed": "2026-09-11", "drawRec": "2026-09-28", "confirmed": "2026-11-27", "ready": "2026-11-20", "pickup": "2026-11-20", "customs": null, "onsite": "2026-11-27", "delivered": null, "comments": [], "lastdelivered": null, "id": "f5"}, {"project": "Paprec", "fase": "5", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511287822", "po": "5511285067", "ref": "IO2013398", "kgOg": 26382.0, "kg": 18005.4, "dueOg": "2026-11-20", "due": "2026-11-20", "drawNeed": "2026-09-18", "drawRec": "2026-10-05", "confirmed": "2026-12-04", "ready": "2026-11-30", "pickup": "2026-11-30", "customs": null, "onsite": "2026-12-03", "delivered": null, "comments": [], "lastdelivered": null, "id": "f6"}, {"project": "Paprec", "fase": "6", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511287597", "po": "5511284519", "ref": "IO2013317", "kgOg": 5822.0, "kg": 4486.6, "dueOg": "2026-11-20", "due": "2026-11-20", "drawNeed": "2026-09-18", "drawRec": "2026-10-01", "confirmed": "2026-12-04", "ready": "2026-11-30", "pickup": "2026-11-30", "customs": null, "onsite": "2026-12-03", "delivered": null, "comments": [], "lastdelivered": null, "id": "f7"}, {"project": "Paprec", "fase": "7", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511288827", "po": "5511285819", "ref": "IO2013977", "kgOg": 30576.0, "kg": 23703.2, "dueOg": "2026-12-11", "due": "2026-12-11", "drawNeed": "2026-10-09", "drawRec": "2026-10-16", "confirmed": "2026-12-11", "ready": null, "pickup": null, "customs": null, "onsite": null, "delivered": null, "comments": [], "lastdelivered": null, "id": "f8"}, {"project": "Paprec", "fase": "8", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511289318", "po": "5511286570", "ref": "IO2014408", "kgOg": 27713.0, "kg": 23370.4, "dueOg": "2027-01-15", "due": "2027-01-15", "drawNeed": "2026-11-06", "drawRec": "2026-10-22", "confirmed": null, "ready": null, "pickup": null, "customs": null, "onsite": null, "delivered": null, "comments": [], "lastdelivered": null, "id": "f9"}, {"project": "Paprec", "fase": "9", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511289326", "po": "5511286571", "ref": "IO2014413", "kgOg": 470.0, "kg": 1976.5, "dueOg": "2027-01-29", "due": "2027-01-29", "drawNeed": "2026-11-20", "drawRec": "2026-10-22", "confirmed": null, "ready": null, "pickup": null, "customs": null, "onsite": null, "delivered": null, "comments": [], "lastdelivered": null, "id": "f10"}, {"project": "Paprec", "fase": "11", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "", "eind": "Rue des Trappiers, 54380 Dieulouard", "land": "Fr", "order": "1511289329", "po": "5511286572", "ref": "IO2014425", "kgOg": 0.0, "kg": 2409.1, "dueOg": "2027-01-08", "due": "2027-01-08", "drawNeed": "2026-10-23", "drawRec": "2026-10-22", "confirmed": null, "ready": null, "pickup": null, "customs": null, "onsite": null, "delivered": null, "comments": [], "lastdelivered": null, "id": "f11"}, {"project": "Veolia", "fase": "1 & 2", "status": "Gepland", "transporteur": "Quehenberger", "inklaringDoor": "Gaston Schul", "eind": "Hollingdean Ln, Brighton and Hove, Brighton BN1 7BB", "land": "UK", "order": "1511284331", "po": "5511281806", "ref": "IO2011622", "kgOg": 16256.0, "kg": 16256.0, "dueOg": "2026-10-26", "due": "2026-11-04", "drawNeed": "2026-08-24", "drawRec": "2026-08-17", "confirmed": "2026-10-26", "ready": "2026-10-19", "pickup": "2026-10-19", "customs": "2026-10-22", "onsite": "2026-10-22", "delivered": "2026-10-23", "comments": [], "lastdelivered": null, "id": "f12"}, {"project": "St. Louis", "fase": "1", "status": "Gepland", "transporteur": "Quehenberger logistics", "inklaringDoor": "Gaston schul", "eind": "Ijzerweg 2, 9936 BM Farsum", "land": "NL", "order": "1511280654", "po": "5511277774", "ref": "St. Louis fase 1", "kgOg": 6007.0, "kg": 6007.0, "dueOg": "2026-09-16", "due": "2026-10-21", "drawNeed": "2026-07-17", "drawRec": "2026-07-09", "confirmed": "2026-09-21", "ready": "2026-09-14", "pickup": "2026-09-14", "customs": null, "onsite": "2026-09-21", "delivered": "2026-09-21", "comments": [], "lastdelivered": null, "id": "f13"}, {"project": "St. Louis", "fase": "2", "status": "Gepland", "transporteur": "Quehenberger logistics", "inklaringDoor": "Gaston schul", "eind": "Ijzerweg 2, 9936 BM Farsum", "land": "NL", "order": "1511280658", "po": "5511277775", "ref": "St. Louis fase 2", "kgOg": 17437.0, "kg": 17437.0, "dueOg": "2026-09-16", "due": "2026-10-21", "drawNeed": "2026-07-17", "drawRec": "2026-07-09", "confirmed": "2026-09-21", "ready": "2026-09-14", "pickup": "2026-09-14", "customs": null, "onsite": "2026-09-21", "delivered": "2026-09-21", "comments": [], "lastdelivered": null, "id": "f14"}];
@@ -118,7 +123,7 @@ const fv=(l,v)=>`<div><span class="no">${l}</span><br>${v||'–'}</div>`,GB=(t,a
 const CV=(id,p,r)=>id==='@dl'?fmt(r.dl)+(r.drawLate>0&&!r.done?` <span class="warn">(${r.drawLate} d te laat)</span>`:''):id==='@t'?fmt(r.t):id==='@tw'?twHtml(p):id==='@rl'?(p.drawRec&&r.t?(Math.round(diff(r.t,startOf(p))/7*10)/10)+' wk (incl. vakantie)':'–'):dev(r);
 const SUPL={n:'naam',lead:'doorlooptijd',in:'afgifte',out:'ophalen',inDone:'afgifte gerealiseerd',outDone:'ophalen gerealiseerd',inArr:'afgifte afgesproken',outArr:'ophaaldatum afgesproken'};
 const fmtSup=(f,v)=>f==='lead'?(v==null?'standaard':v):(f==='in'||f==='out')?fmt(v):/Done$|Arr$/.test(f)?(v?'ja':'nee'):(v||'–');
-let S={phases:[],projects:{},log:[],set:{}},view='gantt',pf='',sel=null,dbDoc=null;
+let S={phases:[],projects:{},log:[],set:{}},view='gantt',pf='',sel=null;
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const d0=s=>s?new Date(s+'T00:00:00'):null,iso=d=>d.toISOString().slice(0,10),add=(s,n)=>{const d=d0(s);d.setDate(d.getDate()+n);return iso(new Date(d.getTime()-d.getTimezoneOffset()*6e4))};
 const diff=(a,b)=>Math.round((d0(a)-d0(b))/864e5),fmt=s=>s?s.slice(8,10)+'-'+s.slice(5,7)+'-'+s.slice(0,4):'–';
@@ -160,16 +165,119 @@ function mergeIn(R){S.del=uni(S.del||[],R.del||[],x=>x);S.delc=uni(S.delc||[],R.
  for(const rp of R.phases||[]){if(S.del.includes(rp.id))continue;const lp=S.phases.find(x=>x.id===rp.id);if(!lp){rp.comments=(rp.comments||[]).filter(nd);S.phases.push(rp)}else lp.comments=uni(lp.comments||[],rp.comments||[],ck).filter(nd)}
  S.delp=uni(S.delp||[],R.delp||[],x=>x);for(const n in R.projects||{})if(!S.projects[n]&&!S.delp.includes(n))S.projects[n]=R.projects[n];
  S.log=uni(S.log,R.log||[],lk).sort((a,b)=>(b.at||0)-(a.at||0))}
-async function save(){norm();try{localStorage.setItem('pl',JSON.stringify(S))}catch(e){}
- if(dbDoc){try{const s=await dbDoc.get();if(s.exists){mergeIn(JSON.parse(s.data().json));norm()}last=JSON.stringify(S);await dbDoc.set({json:last});if(!$('#dlg').open)render()}catch(e){console.error(e)}}}
+/* ===== Supabase-laag: inloggen, rollen, opslag per tabel, live-synchronisatie ===== */
+const SB_URL='https://rcevivqtbsqzwlwxwvep.supabase.co',SB_KEY='sb_publishable_9LOGGFN2xKtNdcWOMT3bCA_D3Z7KJmc';
+const SB=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let ME=null,RO=false,started=null,base=null,rtCh=null,rtT=null,saveQ=Promise.resolve(),pwMode=/type=(invite|recovery)/.test(location.hash||'');
+const sig=o=>JSON.stringify(o);
+const cKey=(pid,c)=>[pid,c.who,c.at??'',c.t].join('|'),lKey=l=>[l.at??'',l.who,l.pf,l.f].join('|');
+function rowsOf(){
+ const R={projects:{},phases:{},comments:{},log:{},settings:{}};
+ for(const n in S.projects)R.projects[n]={name:n,tpl:S.projects[n].tpl||{prod:9,tr:null,cu:null,sups:[]}};
+ for(const p of S.phases){const {id,project,fase,comments,status,...d}=p;R.phases[id]={id,project,fase:String(fase??''),data:d};
+  for(const c of comments||[])R.comments[cKey(id,c)]={phase_id:id,who:c.who,ts:c.ts||null,at:c.at??null,body:c.t}}
+ for(const l of S.log||[])R.log[lKey(l)]={at:l.at??null,ts:l.ts||null,who:l.who||'?',pf:l.pf||null,f:l.f||null,o:l.o==null?null:String(l.o),n:l.n==null?null:String(l.n)};
+ R.settings={thresholds:{value:S.set},holidays:{value:S.holidays||[]},project_order:{value:{v:S.order||null}}};
+ return R}
+function stateFrom(d){
+ const N={phases:[],projects:{},log:[],set:{},holidays:[],order:null,uv:1,del:[],delc:[],delp:[]};
+ for(const r of d.projects)N.projects[r.name]={tpl:r.tpl};
+ const cm={};for(const c of d.comments)(cm[c.phase_id]=cm[c.phase_id]||[]).push({m:'',who:c.who,ts:c.ts,at:c.at,t:c.body});
+ for(const r of d.phases)N.phases.push({...r.data,id:r.id,project:r.project,fase:r.fase,comments:cm[r.id]||[]});
+ N.log=d.log.map(l=>({at:l.at,ts:l.ts,who:l.who,pf:l.pf,f:l.f,o:l.o,n:l.n}));
+ for(const r of d.settings){if(r.key==='thresholds')N.set=r.value||{};else if(r.key==='holidays')N.holidays=Array.isArray(r.value)?r.value:[];else if(r.key==='project_order'){const v=r.value;N.order=Array.isArray(v)?v:(v&&Array.isArray(v.v)?v.v:null)}}
+ return N}
+async function fetchAll(){
+ const q=[SB.from('projects').select('*'),SB.from('phases').select('*').order('created_at').order('id'),SB.from('settings').select('*')];
+ if(!RO){q.push(SB.from('comments').select('*').order('at',{ascending:true}).limit(5000),SB.from('activity_log').select('*').order('at',{ascending:false}).limit(3000))}
+ const r=await Promise.all(q);for(const x of r)if(x.error)throw x.error;
+ return {projects:r[0].data,phases:r[1].data,settings:r[2].data,comments:RO?[]:r[3].data,log:RO?[]:r[4].data}}
+async function loadAll(force){
+ const d=await fetchAll(),keep=S;S=stateFrom(d);norm();const nb=rowsOf();
+ if(!force&&base&&sig(nb)===sig(base)){S=keep;return false}
+ base=nb;return true}
+function toast2(m){try{toast(m)}catch(e){alert(m)}}
+async function doSave(){
+ if(RO||!base)return;norm();const cur=rowsOf(),by=ME&&ME.initials||who()||null;
+ try{
+  for(const t of ['projects','phases']){const key=t==='projects'?'name':'id';
+   const up=Object.values(cur[t]).filter(r=>sig(r)!==sig(base[t][r[key]])).map(r=>t==='phases'?{...r,updated_by:by,updated_at:new Date().toISOString()}:r);
+   if(up.length){const e=(await SB.from(t).upsert(up,{onConflict:key})).error;if(e)throw e}}
+  const sets=Object.entries(cur.settings).filter(([k,v])=>sig(v)!==sig(base.settings[k])).map(([k,v])=>({key:k,value:v.value,updated_at:new Date().toISOString()}));
+  if(sets.length){const e=(await SB.from('settings').upsert(sets,{onConflict:'key'})).error;if(e)throw e}
+  const nc=Object.entries(cur.comments).filter(([k])=>!base.comments[k]).map(([,v])=>v);
+  if(nc.length){const e=(await SB.from('comments').insert(nc)).error;if(e)throw e}
+  for(const [k,v] of Object.entries(base.comments)){if(cur.comments[k])continue;
+   let q=SB.from('comments').delete().eq('phase_id',v.phase_id).eq('who',v.who).eq('body',v.body);q=v.at==null?q.is('at',null):q.eq('at',v.at);const e=(await q).error;if(e)throw e}
+  const nl=Object.entries(cur.log).filter(([k])=>!base.log[k]).map(([,v])=>v);
+  if(nl.length){const e=(await SB.from('activity_log').insert(nl)).error;if(e)throw e}
+  for(const t of ['phases','projects']){const key=t==='projects'?'name':'id';const gone=Object.keys(base[t]).filter(k=>!cur[t][k]);
+   if(gone.length){const e=(await SB.from(t).delete().in(key,gone)).error;if(e)throw e}}
+  base=cur;
+ }catch(e){console.error(e);toast2('Opslaan mislukt: '+(e.message||e)+' – de pagina wordt ververst met de actuele gegevens.');try{await loadAll(true);render()}catch(x){}}}
+function save(){norm();saveQ=saveQ.then(doSave).then(()=>{if(!$('#dlg').open)render()});return saveQ}
+function stopRt(){if(rtCh){SB.removeChannel(rtCh);rtCh=null}}
+function startRt(){stopRt();const bump=()=>{clearTimeout(rtT);rtT=setTimeout(async function tick(){
+  const a=document.activeElement;if($('#dlg').open||(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.id!=='q'&&a.id!=='who')){rtT=setTimeout(tick,2500);return}
+  try{await saveQ;if(await loadAll())render()}catch(e){console.error(e)}},700)};
+ rtCh=SB.channel('pp').on('postgres_changes',{event:'*',schema:'public'},bump).subscribe()}
+/* ----- inloggen ----- */
+const L$=s=>document.getElementById(s);
+function loginMode(m){const lg=L$('login');lg.className='on';L$('ler').textContent='';L$('ler').classList.remove('ok');
+ const pw=m==='set',fg=m==='forgot';
+ L$('lmail').style.display=pw?'none':'';L$('lpw').style.display=fg?'none':'';L$('lpw2').style.display=pw?'':'none';
+ L$('lp').autocomplete=pw?'new-password':'current-password';L$('lpl').textContent=pw?'Nieuw wachtwoord (min. 8 tekens)':'Wachtwoord';
+ L$('lsub').textContent=pw?'Kies een wachtwoord voor je account.':fg?'Vul je e-mailadres in, dan sturen we een herstellink.':'Log in om verder te gaan.';
+ L$('lgo').textContent=pw?'Wachtwoord opslaan':fg?'Herstellink sturen':'Inloggen';L$('lfg').style.display=pw?'none':'';L$('lfg').textContent=fg?'Terug naar inloggen':'Wachtwoord vergeten?';
+ lm=m}
+let lm='login';
+async function lSubmit(){const er=L$('ler');er.classList.remove('ok');er.textContent='';L$('lgo').disabled=true;
+ try{
+  if(lm==='login'){const {error}=await SB.auth.signInWithPassword({email:L$('le').value.trim(),password:L$('lp').value});if(error)throw error}
+  else if(lm==='forgot'){const {error}=await SB.auth.resetPasswordForEmail(L$('le').value.trim(),{redirectTo:location.origin+location.pathname});if(error)throw error;er.classList.add('ok');er.textContent='Als dit adres bekend is, ontvang je een e-mail met een herstellink.'}
+  else{const a=L$('lp').value,b=L$('lp2').value;if(a.length<8)throw new Error('Wachtwoord moet minimaal 8 tekens hebben.');if(a!==b)throw new Error('De wachtwoorden komen niet overeen.');
+   const {error}=await SB.auth.updateUser({password:a});if(error)throw error;pwMode=false;history.replaceState(null,'',location.pathname);const {data:{session}}=await SB.auth.getSession();L$('lp').value='';L$('lp2').value='';if(session)await start(session)}
+ }catch(e){er.textContent=/Invalid login/i.test(e.message)?'E-mailadres of wachtwoord klopt niet.':e.message}
+ L$('lgo').disabled=false}
+async function logout(){stopRt();started=null;base=null;S={phases:[],projects:{},log:[],set:{}};await SB.auth.signOut();loginMode('login')}
+/* ----- alleen-lezen voor viewers ----- */
+function roLock(){if(!RO)return;
+ document.querySelectorAll('#insp input,#insp select,#insp textarea,#dlg input,#dlg select,#dlg textarea').forEach(e=>{e.disabled=true});
+ document.querySelectorAll('#insp button,#dlg button').forEach(b=>{const oc=b.getAttribute('onclick')||'';if(/close\(|showTab|cancel|toggle|fold|opn/i.test(oc)||b.classList.contains('tb'))return;b.style.display='none'})}
+function applyRole(){
+ document.body.classList.toggle('ro',RO);
+ const hide=sel=>document.querySelectorAll(sel).forEach(e=>e.style.display=RO?'none':'');
+ hide('.tb2.add');hide('button[onclick*="xf"]');
+ L$('usr').innerHTML=`<b>${esc(ME.full_name||ME.email||'')}</b> · ${ME.role==='viewer'?'inzage'+(ME.project?' ('+esc(ME.project)+')':''):ME.role==='admin'?'beheerder':'bewerker'} <button class="tb2" onclick="logout()">Uitloggen</button>`;
+ if(ME.initials){$('#who').value=ME.initials;$('#who').readOnly=true}else if(RO){$('#who').parentElement.style.display='none'}
+}
+async function start(session){
+ if(started===session.user.id)return;started=session.user.id;
+ try{
+  const {data:p,error}=await SB.from('profiles').select('*').eq('user_id',session.user.id).maybeSingle();
+  if(error)throw error;if(!p){started=null;await SB.auth.signOut();loginMode('login');L$('ler').textContent='Je account heeft nog geen toegang. Neem contact op met de beheerder.';return}
+  ME={...p,email:session.user.email};RO=p.role==='viewer';
+  await loadAll(true);
+  if(!window.__rw){window.__rw=1;const r0=render;render=function(){if(RO&&['acts','log','set'].includes(view))view='gantt';r0();if(RO)document.querySelectorAll('#nav button').forEach(b=>{if(!/'(gantt|list)'/.test(b.getAttribute('onclick')||''))b.style.display='none'});roLock()};
+   new MutationObserver(roLock).observe(document.body,{childList:true,subtree:true})}
+  if(RO)pf=Object.keys(S.projects)[0]||'';
+  L$('login').className='';applyRole();
+  try{$('#th').value=localStorage.getItem('th')||'light'}catch(e){}
+  render();startRt();
+ }catch(e){console.error(e);started=null;L$('login').className='on';L$('ler').textContent='Laden mislukt: '+(e.message||e)}}
 async function init(){
- try{const l=localStorage.getItem('pl');if(l)S=JSON.parse(l)}catch(e){}
- try{const db=await claude.use('db');if(db){dbDoc=db.doc('app/state');const s=await dbDoc.get();if(s.exists){S=JSON.parse(s.data().json);last=s.data().json}else if(!S.phases.length)await dbDoc.set({json:JSON.stringify(S)});dbDoc.onSnapshot(q=>{if(!q.exists)return;const j=q.data().json;if(j===last)return;last=j;S=JSON.parse(j);norm();if(!$('#dlg').open)render()},e=>{})}}catch(e){}
- norm();
- if(!S.phases.length){S.phases=SEED.map(p=>({...p,status:(p.delivered&&p.delivered<=TODAY)?'Geleverd':p.status}));S.projects={};[...new Set(S.phases.map(p=>p.project))].forEach(n=>S.projects[n]=newProj(9));save()}
- try{$('#who').value=localStorage.getItem('who')||''}catch(e){}
  {let tv='light';try{tv=localStorage.getItem('th')||'light'}catch(e){}setTheme(tv);$('#th').value=tv}
- $('#who').oninput=e=>{try{localStorage.setItem('who',e.target.value.toUpperCase())}catch(x){}};render()}
+ $('#who').oninput=e=>{try{localStorage.setItem('who',e.target.value.toUpperCase())}catch(x){}};
+ try{if(!ME)$('#who').value=localStorage.getItem('who')||''}catch(e){}
+ L$('lf').addEventListener('submit',e=>{e.preventDefault();lSubmit()});
+ L$('lfg').onclick=()=>loginMode(lm==='forgot'?'login':'forgot');
+ SB.auth.onAuthStateChange((ev,sess)=>{
+  if(ev==='PASSWORD_RECOVERY'){pwMode=true;loginMode('set');return}
+  if(ev==='SIGNED_OUT'){stopRt();started=null;return}
+  if(ev==='SIGNED_IN'&&sess){if(pwMode)loginMode('set');else setTimeout(()=>start(sess),0)}});
+ const {data:{session}}=await SB.auth.getSession();
+ if(pwMode)loginMode('set');else if(session)start(session);else loginMode('login')}
+
 const who=()=>$('#who').value.trim().toUpperCase();
 const filterBar=()=>`<div class="fb"><label class="no">Project <select onchange="pf=this.value;render()"><option value="">Alle projecten</option>${Object.keys(S.projects).map(n=>`<option ${pf===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label></div>`;
 function setTheme(v){document.documentElement.setAttribute('data-theme',v);try{localStorage.setItem('th',v)}catch(e){}}
@@ -380,12 +488,12 @@ async function xImport(inp){const file=inp.files[0];inp.value='';if(!file)return
     if(m){const si=+m[1],f=m[2];p.sups=p.sups||[];const o=(p.sups[si]=p.sups[si]||{});if((o[f]??null)===vals[k])continue;if(f!=='n')S.log.unshift({at:Date.now(),ts:nowS(),who:i,pf:pfl,f:'Tussenleverancier '+(si+1)+' – '+SUPL[f]+' (Excel)',o:fmtSup(f,o[f]),n:fmtSup(f,vals[k])});o[f]=vals[k];continue}
     if(p[k]===vals[k])continue;if(LOGK.includes(k)&&p[k]!=null)S.log.unshift({at:Date.now(),ts:nowS(),who:i,pf:pfl,f:LBL[k]+' (Excel)',o:isD(k)?fmt(p[k]):(p[k]??'–'),n:isD(k)?fmt(vals[k]):vals[k]});p[k]=vals[k]}}
   await save();render();toast(`Excel geïmporteerd: ${nw} nieuw, ${up} bijgewerkt. Lege cellen overschrijven niets.`)}catch(e){console.error(e);toast('Importeren mislukt: '+(e.message||e))}}
-async function xExport(){if(typeof XLSX==='undefined'){toast('Excel-bibliotheek niet geladen.');return}const dl=await claude.use('downloads');if(!dl){toast('Downloaden is hier niet beschikbaar.');return}
+async function xExport(){if(typeof XLSX==='undefined'){toast('Excel-bibliotheek niet geladen.');return}
  const ser=v=>v?{t:'n',v:diff(v,'1899-12-30'),z:'dd-mm-yyyy'}:null,hdr=[...XH.map(x=>x[1]),'Doorlooptijd tot levering klant (dagen, berekend)','Uiterste aanlevering tekeningen en inkooporder (berekend)','Reële einddatum (berekend)','Status'];
  const get=(p,k)=>{const m=k.match(/^s(\d)(n|lead|in|inDone|inArr|out|outDone|outArr)$/);const v=m?((p.sups||[])[+m[1]]||{})[m[2]]:p[k];return isD(k)?ser(v):isB(k)?(v?'ja':'nee'):(v??null)};
  const rows=S.phases.map(p=>{const r=calc(p);return [...XH.map(([k])=>get(p,k)),leadDays(p),ser(r.dl),ser(r.t),p.status]});
  const ws=XLSX.utils.aoa_to_sheet([hdr,...rows]);ws['!cols']=hdr.map(h=>({wch:Math.max(12,Math.min(34,h.length+2))}));const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Planning');
- try{await dl.save({filename:'projectplanning_'+TODAY+'.xlsx',data:XLSX.write(wb,{type:'array',bookType:'xlsx'})})}catch(e){if(e&&e.code!=='declined')toast('Exporteren mislukt.')}}
+ try{XLSX.writeFile(wb,'projectplanning_'+TODAY+'.xlsx')}catch(e){toast('Exporteren mislukt.')}}
 function setLead(n,v){S.projects[n].lead=Math.max(1,+v||9);save();render()}
 function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',3500);if(/initialen/i.test(t)){const w=$('#who');if(w&&w.focus){w.focus();w.style.outline='2px solid #ff6b6b';setTimeout(()=>w.style.outline='',2500)}}}
 function getWho(sel){const i=($(sel)?.value||'').trim().toUpperCase();if(i){$('#who').value=i;try{localStorage.setItem('who',i)}catch(e){}}return i}
