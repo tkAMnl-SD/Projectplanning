@@ -200,7 +200,7 @@ function rowsOf(){
   for(const c of comments||[])R.comments[cKey(id,c)]={phase_id:id,who:c.who,ts:c.ts||null,at:c.at??null,body:c.t}}
  for(const l of S.log||[])R.log[lKey(l)]={at:l.at??null,ts:l.ts||null,who:l.who||'?',pf:l.pf||null,f:l.f||null,o:l.o==null?null:String(l.o),n:l.n==null?null:String(l.n)};
  R.settings={thresholds:{value:S.set},holidays:{value:S.holidays||[]},project_order:{value:{v:S.order||null}}};
- return R}
+ return JSON.parse(JSON.stringify(R))/* diepe kopie: anders delen base en S dezelfde geneste objecten (sups, tpl) en worden wijzigingen daarin niet gezien */}
 function stateFrom(d){
  const N={phases:[],projects:{},log:[],set:{},holidays:[],order:null,uv:1,del:[],delc:[],delp:[]};
  for(const r of d.projects)N.projects[r.name]={tpl:r.tpl};
